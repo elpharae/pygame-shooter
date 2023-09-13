@@ -43,3 +43,21 @@ class Player(Entity):
 
     def draw(self, screen: pygame.Surface):
         screen.blit(self.image, (self.x, self.y))
+
+class Bullet(Entity):
+    
+    def __init__(self, image_path: str, x: float, y: float, image_size: int, damage: float, speed: float):
+        super().__init__(image_path, x, y, image_size)
+        self.damage = damage
+        self.speed = speed
+        self.enabled = True
+    
+    def move(self, direction: float):
+        self.y += direction * self.speed 
+        
+    def draw(self, screen: pygame.Surface):
+        screen.blit(self.image, (self.x, self.y))
+
+    def check_oob(self):
+        if self.x > width or self.x < 0 or self.y > height or self.y < 0:
+            self.enabled = False
