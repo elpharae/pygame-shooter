@@ -17,7 +17,7 @@ class Entity(ABC):
         self.image = pygame.transform.scale(self.image, (image_size, image_size))
 
     @abstractmethod
-    def move(self, direction: Tuple[float, float]):
+    def move(self, direction: Tuple[float, float], dt: float):
         pass
 
     @abstractmethod
@@ -31,10 +31,10 @@ class Player(Entity):
         self.hp = hp
         self.speed = speed
     
-    def move(self, direction: Tuple[float, float]):
+    def move(self, direction: Tuple[float, float], dt: float):
         dir_length = math.sqrt(math.pow(direction[0], 2) + math.pow(direction[1], 2))
         if dir_length != 0:
-            direction = (direction[0] / dir_length * self.speed, direction[1] / dir_length * self.speed)
+            direction = (direction[0] / dir_length * self.speed * dt, direction[1] / dir_length * self.speed * dt)
 
         if not (self.x + direction[0] < 0 or self.x + direction[0] > width - self.image_size):
             self.x += direction[0]
@@ -52,8 +52,8 @@ class Bullet(Entity):
         self.speed = speed
         self.enabled = True
     
-    def move(self, direction: float):
-        self.y += direction * self.speed 
+    def move(self, direction: float, dt: float):
+        self.y += round(direction * self.speed * dt)
         
     def draw(self, screen: pygame.Surface):
         screen.blit(self.image, (self.x, self.y))
